@@ -1,4 +1,4 @@
-(defproject yetibot-stackstorm "0.1.4"
+(defproject yetibot-stackstorm "0.1.5-SNAPSHOT"
   :description "yetibot Stackstorm plugin"
   :url "https://github.com/devth/yetibot.core"
   :scm {:name "git" :url "https://github.com/devth/yetibot-stackstorm.git"}
