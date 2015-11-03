@@ -16,9 +16,11 @@
 (defn show-execution
   "st2 show <execution-id> # show the result of an execution"
   [{[_ id] :match}]
-  (-> (api/executions-get id)
-      :body
-      api/format-execution))
+  (str "```"
+       (-> (api/executions-get id)
+           :body
+           api/format-execution)
+       "```"))
 
 (cmd-hook #"st2"
   #"list" list-aliases
