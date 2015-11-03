@@ -6,6 +6,7 @@
     [yetibot.core.hooks :refer [cmd-hook]]))
 
 (defn list-aliases
+  "st2 list # list configured StackStorm aliases"
   [_]
   (let [as (api/list-aliases)]
     (if (= 200 (:status as))
