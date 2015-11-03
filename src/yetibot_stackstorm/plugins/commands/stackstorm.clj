@@ -25,5 +25,4 @@
 
 (cmd-hook #"st2"
   #"list" list-aliases
-  #"show.+(\w+)" show-execution)
-
+  #"show\s+(\w+)" show-execution)
