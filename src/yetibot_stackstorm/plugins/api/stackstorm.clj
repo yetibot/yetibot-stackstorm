@@ -47,3 +47,16 @@
      (-> ex :result :stdout)]
     (when (-> ex :result :failed)
       [(str "STDERR: " (-> ex :result :stderr))])))
+
+(defn format-execution-short [ex]
+  (join " "
+        [(:id ex)
+         (:start_timestamp ex)
+         (:end_timestamp ex)
+         (:status ex)
+         (-> ex :liveaction :action)]))
+
+(defn executions-list []
+  (client/get
+    (endpoint (str "/executions"))
+    (opts)))
