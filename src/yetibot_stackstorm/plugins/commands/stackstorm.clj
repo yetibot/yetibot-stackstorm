@@ -23,9 +23,9 @@
   "st2 show <execution-id> # show the result of an execution"
   [{[_ id] :match}]
   (str "```"
-       (join \n (-> (api/executions-get id)
-                    :body
-                    api/format-execution))
+       (join \newline (-> (api/executions-get id)
+                          :body
+                          api/format-execution))
        "```"))
 
 (cmd-hook #"st2"
