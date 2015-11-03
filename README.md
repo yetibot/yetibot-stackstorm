@@ -3,6 +3,8 @@
 Add yetibot-stackstorm as a dependency to your yetibot installation and
 configure it.
 
+[![Clojars Project](http://clojars.org/yetibot-stackstorm/latest-version.svg)](http://clojars.org/yetibot-stackstorm)
+
 ## Usage
 
 See [config-sample.edn](config-sample.edn) for configuration options.
