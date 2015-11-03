@@ -1,0 +1,8 @@
+;; merge this into config/config.edn in your yetibot installation
+;; in the future we may support auto-merging multiple config files
+{:yetibot-stackstorm
+ {:models
+  {:stackstorm
+   {:api-key ""
+    :api-endpoint ""}}}}
+
