@@ -14,4 +14,4 @@
                  :timeout 120000
                  :welcome (println "Welcome to the yetibot StackStorm development repl!")}
   :dependencies [[org.clojure/clojure "1.6.0"]
-                 [yetibot.core "0.2.49"]])
+                 [yetibot.core "0.2.51"]])
