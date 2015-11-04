@@ -3,6 +3,7 @@
     [taoensso.timbre :refer [info]]
     [clojure.string :refer [join]]
     [clj-http.client :as client]
+    [clj-http.util :refer [url-decode url-encode]]
     [yetibot.core.config :refer [get-config reload-config]]))
 
 (defn config []
@@ -11,6 +12,8 @@
 (defn opts [& [m]]
   (merge {:accept :json
           :insecure? true
+          :throw-exceptions false
+          :coerce :always
           :as :json
           :headers {"St2-Api-Key" (:api-key (config))}}
          (or m {})))
@@ -21,8 +24,21 @@
     (endpoint "/actionalias")
     (opts)))
 
+(defn get-alias [alias-name]
+  (client/get
+    (endpoint (str "/actionalias/" (url-encode alias-name)))
+    (opts)))
+
 (defn format-alias-short [a]
-  (str (if (:enabled a) "✅" "🚫") (:name a) ": " (:description a)))
+  (str (if (:enabled a) "✅ "  "🚫 ") (:ref a) ": " (:description a)))
+
+(defn format-alias [a]
+  (concat
+    [(format-alias-short a)
+     (:action_ref a)
+     (:id a)
+     (str "pack: " (:pack a))]
+    (:formats a)))
 
 (defn run-alias [alias-name alias-format command]
   (client/post
@@ -36,7 +52,7 @@
 
 (defn executions-get [id]
   (client/get
-    (endpoint (str "/executions/" id))
+    (endpoint (str "/executions/" (url-encode id)))
     (opts)))
 
 (defn format-execution [ex]
