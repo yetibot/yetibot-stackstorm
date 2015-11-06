@@ -1,6 +1,6 @@
 (ns yetibot-stackstorm.plugins.api.stackstorm
   (:require
-    [taoensso.timbre :refer [info]]
+    [taoensso.timbre :refer [info warn]]
     [clojure.string :refer [join]]
     [clj-http.client :as client]
     [clj-http.util :refer [url-decode url-encode]]
@@ -18,6 +18,18 @@
           :headers {"St2-Api-Key" (:api-key (config))}}
          (or m {})))
 (defn endpoint [path] (-> (config) :api-endpoint (str path)))
+
+;; todo: extract a `report-error-or [response on-succ & [on-err]]` to core
+(defn success? [res] (re-find #"^2" (str (:status res) "2")))
+
+(defn report-if-error
+  "Checks the stauts of the HTTP response for 2xx, and if not, reports the body."
+  [res succ-fn]
+  (if (success? res)
+    (succ-fn res)
+    (do
+      (warn "stackstorm api error" res)
+      (:body res))))
 
 (defn list-aliases []
   (client/get
@@ -40,7 +52,7 @@
      (str "pack: " (:pack a))]
     (:formats a)))
 
-(defn run-alias [alias-name alias-format command]
+(defn run-alias [alias-name alias-format command source-channel]
   (client/post
     (endpoint "/v1/aliasexecution")
     (opts {:content-type :json
@@ -48,9 +60,9 @@
                          "format" alias-format
                          "command" command
                          "user" "admin"
-                         "source_channel" "test"}})))
+                         "source_channel" source-channel}})))
 
-(defn executions-get [id]
+(defn get-execution [id]
   (client/get
     (endpoint (str "/executions/" (url-encode id)))
     (opts)))
@@ -61,8 +73,8 @@
      (str "Start time: " (:start_timestamp ex))
      (str "Finish time: " (:start_timestamp ex))
      (-> ex :result :stdout)]
-    (when (-> ex :result :failed)
-      [(str "STDERR: " (-> ex :result :stderr))])))
+    (when (not-empty (-> ex :result :stderr))
+      [(str "STDERR: \n" (-> ex :result :stderr))])))
 
 (defn format-execution-short [ex]
   (join " "
