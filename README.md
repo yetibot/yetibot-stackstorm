@@ -8,9 +8,16 @@ plugins, see [yetibot](https://github.com/devth/yetibot).
 
 [![Clojars Project](http://clojars.org/yetibot-stackstorm/latest-version.svg)](http://clojars.org/yetibot-stackstorm)
 
-## Usage
+## Config
 
-See [config-sample.edn](config-sample.edn) for configuration options.
+```edn
+;; merge this into config/config.edn in your yetibot installation
+{:yetibot-stackstorm
+ {:models
+  {:stackstorm
+   {:api-key ""
+    :api-endpoint ""}}}}
+```
 
 ## License
 
