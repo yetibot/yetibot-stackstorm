@@ -60,6 +60,7 @@
                          "format" alias-format
                          "command" command
                          "user" "admin"
+                         "notification_route" "yetibot"
                          "source_channel" source-channel}})))
 
 (defn get-execution [id]
@@ -69,10 +70,13 @@
 
 (defn format-execution [ex]
   (concat
-    [(str "Status: " (:status ex))
-     (str "Start time: " (:start_timestamp ex))
-     (str "Finish time: " (:start_timestamp ex))
-     (-> ex :result :stdout)]
+    (remove
+      nil?
+      [(str "Status: " (:status ex))
+       (str "Start time: " (:start_timestamp ex))
+       (when (not= "running" (:status ex))
+         (str "Finish time: " (:start_timestamp ex)))
+       (-> ex :result :stdout)])
     (when (not-empty (-> ex :result :stderr))
       [(str "STDERR: \n" (-> ex :result :stderr))])))
 
