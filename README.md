@@ -19,6 +19,28 @@ plugins, see [yetibot](https://github.com/devth/yetibot).
     :api-endpoint ""}}}}
 ```
 
+## Authorization
+
+Because a Yetibot-StackStorm bridge opens up all kinds of power, a way to
+specify authorized users is available at the config level by specifying a
+`:authorized` key and set value of user IDs. If this key is not present, no
+authorization checking will occur. If it's an empty set, no users will be
+authorizaed to run StackStorm aliases.
+
+IDs in Slack look like `"U12341234"` and in IRC they look like `"~devth"`.
+
+```edn
+;; merge this into config/config.edn in your yetibot installation
+{:yetibot-stackstorm
+ {:models
+  {:stackstorm
+   {:authorized #{"~devth"}
+    :api-key ""
+    :api-endpoint ""}}}}
+```
+
+
+
 ## License
 
 Copyright © 2015 Trevor C. Hartman

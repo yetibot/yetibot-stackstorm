@@ -39,6 +39,19 @@
       #"\{\{.+\}\}"
       "(\\\\S+)")))
 
+(defn verify-permissions
+  "If authorized is configured, verify the user. If authorized is not
+   configured, allow all users."
+  [user]
+  (let [c (api/config)]
+    (if-let [auth (:authorized (api/config))]
+      (do
+        (info "verify permissions for" user "against" auth)
+        (auth (:id user)))
+      (do
+        (info ":authorized is not configured, allow user by default")
+        true))))
+
 (defn wire-st2-alias [[prefix aliases]]
   (swap! hooked-aliases conj prefix)
   (let [re-prefix (re-pattern prefix)]
@@ -54,13 +67,17 @@
               [(create-regex without-prefix)
                (fn [{:keys [raw args user chat-source]}]
                  (info "st2" prefix "matches with" args)
-                 (api/report-if-error
-                   (api/run-alias
-                     (:name exploded-alias)
-                     fmt
-                     (str prefix " " args)
-                     (pr-str chat-source))
-                   :body))])))
+                 (if (verify-permissions user)
+                   (api/report-if-error
+                     (api/run-alias
+                       (:name exploded-alias)
+                       fmt
+                       (str prefix " " args)
+                       (pr-str chat-source))
+                     :body)
+                   (str "💥 You are not authorized to run StackStorm aliases, "
+                        (:username user)
+                        ". Contact your Yetibot admin to gain privileges. 💥")))])))
         aliases))))
 
 (defn format-help-string [s]
