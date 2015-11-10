@@ -27,9 +27,11 @@
   [res succ-fn]
   (if (success? res)
     (succ-fn res)
-    (do
+    (let [body (:body res)]
       (warn "stackstorm api error" res)
-      (:body res))))
+      (if-let [err (:faultstring body)]
+        err
+        body))))
 
 (defn list-aliases []
   (client/get
