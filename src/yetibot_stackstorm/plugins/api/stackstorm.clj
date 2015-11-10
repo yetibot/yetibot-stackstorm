@@ -75,7 +75,7 @@
       [(str "Status: " (:status ex))
        (str "Start time: " (:start_timestamp ex))
        (when (not= "running" (:status ex))
-         (str "Finish time: " (:start_timestamp ex)))
+         (str "Finish time: " (:end_timestamp ex)))
        (-> ex :result :stdout)])
     (when (not-empty (-> ex :result :stderr))
       [(str "STDERR: \n" (-> ex :result :stderr))])))
