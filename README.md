@@ -1,5 +1,7 @@
 # yetibot-stackstorm
 
+:warning::warning::warning: This plugin doesn't work with latest Yetibot. If you're interested in using it, open an issue and we will prioritize fixing it. 
+
 Add yetibot-stackstorm as a dependency to your yetibot installation and
 configure it.
 
